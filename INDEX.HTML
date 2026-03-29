@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pappu Chaurashiya | Developer & Founder</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-color: #050505;
+            --neon-primary: #00ffcc;
+            --neon-secondary: #ff00ff;
+            --glass-bg: rgba(20, 20, 20, 0.4);
+            --glass-border: rgba(0, 255, 204, 0.2);
+            --text-main: #ffffff;
+            --text-muted: #a0a0a0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            cursor: none; /* Custom cursor for desktop */
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        /* Custom Cursor */
+        .cursor-glow {
+            width: 20px;
+            height: 20px;
+            background: var(--neon-primary);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            mix-blend-mode: screen;
+            box-shadow: 0 0 20px var(--neon-primary), 0 0 40px var(--neon-primary);
+            transform: translate(-50%, -50%);
+            z-index: 9999;
+            transition: width 0.2s, height 0.2s;
+        }
+
+        /* Disable custom cursor on touch devices (Mobile) */
+        @media (pointer: coarse) {
+            * {
+                cursor: auto !important;
+            }
+            .cursor-glow {
+                display: none !important;
+            }
+        }
+
+        /* 3D Canvas Background */
+        #canvas-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+        }
+
+        /* Glassmorphism Utility */
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--neon-primary);
+        }
+
+        /* Typography & Neon */
+        h1, h2, h3 {
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .neon-text {
+            color: #fff;
+            text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 20px var(--neon-primary), 0 0 40px var(--neon-primary);
+        }
+
+        section {
+            min-height: 100vh;
+            padding: 100px 10%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        /* Hero Section */
+        #home {
+            align-items: flex-start;
+        }
+        
+        .hero-title {
+            font-size: 4rem; 
+            margin: 10px 0;
+        }
+
+        .typewriter {
+            font-size: 1.5rem;
+            color: var(--neon-secondary);
+            border-right: 2px solid var(--neon-secondary);
+            white-space: nowrap;
+            overflow: hidden;
+            animation: typing 4s steps(40, end), blink-caret .75s step-end infinite;
+            margin-top: 10px;
+        }
+
+        @keyframes typing { from { width: 0 } to { width: 100% } }
+        @keyframes blink-caret { from, to { border-color: transparent } 50% { border-color: var(--neon-secondary); } }
+
+        /* Grid Layouts */
+        .skills-grid, .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        /* Timeline for Experience */
+        .timeline {
+            border-left: 2px solid var(--neon-primary);
+            padding-left: 20px;
+            margin-top: 2rem;
+        }
+        
+        .timeline-item {
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -27px;
+            top: 0;
+            width: 12px;
+            height: 12px;
+            background: var(--neon-primary);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--neon-primary);
+        }
+
+        /* Buttons & Forms */
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            margin-top: 15px;
+            color: var(--bg-color);
+            background: var(--neon-primary);
+            text-decoration: none;
+            font-weight: bold;
+            border-radius: 5px;
+            box-shadow: 0 0 10px var(--neon-primary);
+            transition: all 0.3s;
+            border: none;
+            outline: none;
+        }
+
+        .btn:hover {
+            box-shadow: 0 0 20px var(--neon-primary), 0 0 40px var(--neon-primary);
+            transform: scale(1.05);
+        }
+
+        .btn-whatsapp {
+            background: #25D366;
+            box-shadow: 0 0 10px #25D366;
+            color: white;
+            text-align: center;
+        }
+        
+        .btn-whatsapp:hover {
+            box-shadow: 0 0 20px #25D366, 0 0 40px #25D366;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            color: white;
+            border-radius: 8px;
+            outline: none;
+        }
+
+        input:focus, textarea:focus {
+            border-color: var(--neon-primary);
+        }
+
+        /* Navbar */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 20px 10%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(5, 5, 5, 0.8);
+            backdrop-filter: blur(10px);
+            z-index: 100;
+        }
+
+        .nav-links {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin-left: 20px;
+            transition: color 0.3s;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+        }
+
+        nav a:hover {
+            color: var(--neon-primary);
+        }
+
+        /* Social Links */
+        .social-links a {
+            color: white;
+            font-size: 1.5rem;
+            margin-right: 15px;
+            transition: color 0.3s;
+        }
+        .social-links a:hover {
+            color: var(--neon-primary);
+        }
+        
+        .contact-footer {
+            margin-top: 2rem; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        /* =========================================
+           MOBILE RESPONSIVE QUERIES
+           ========================================= */
+        @media (max-width: 768px) {
+            section {
+                padding: 120px 5% 50px 5%; /* Adjusted padding for mobile */
+            }
+            
+            nav {
+                flex-direction: column;
+                padding: 15px 5%;
+                gap: 15px;
+            }
+            
+            nav a {
+                margin-left: 10px;
+                margin-right: 10px;
+                font-size: 0.8rem;
+            }
+
+            .nav-links {
+                justify-content: center;
+            }
+
+            .hero-title {
+                font-size: 2.5rem; /* Scaled down H1 */
+            }
+
+            .typewriter {
+                font-size: 1rem; /* Scaled down typewriter text */
+                white-space: normal; /* Allows wrapping if it still overflows */
+                animation: none; /* Disable strict width animation on mobile to prevent horizontal scroll */
+                border-right: none;
+            }
+
+            .glass-card {
+                padding: 1.5rem;
+            }
+            
+            .contact-footer {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .btn-whatsapp {
+                width: 100%;
+            }
+        }
+        /* --- Photo Container & Wrapper (FINAL FIXED) --- */
+.photo-wrapper {
+    width: 100%;
+    min-height: 450px; /* Ye space reserve rakhega taaki content upar na chadhe */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    perspective: 1000px;
+    padding-top: 120px; /* Nav bar se dori */
+    padding-bottom: 20px;
+    position: relative;
+    z-index: 10; /* Ye ensures photo sahi layer pe rahe */
+}
+
+.photo-container {
+    position: relative;
+    width: 300px; 
+    height: 300px;
+    transform-style: preserve-3d;
+}
+
+/* Circular Photo Box */
+.profile-img-box {
+    width: 220px; 
+    height: 220px;
+    border-radius: 50%;
+    border: 3px solid var(--neon-primary);
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 5;
+    overflow: hidden;
+    box-shadow: 0 0 30px rgba(0, 255, 204, 0.4);
+}
+
+.profile-img-box img { 
+    width: 100%; 
+    height: 100%; 
+    object-fit: cover; 
+}
+
+/* Rotating Dashed Ring */
+.rotating-ring {
+    position: absolute;
+    width: 280px; 
+    height: 280px;
+    top: 10px; left: 10px;
+    border-radius: 50%;
+    border: 2px dashed var(--neon-primary);
+    animation: rotateRing 15s linear infinite;
+}
+
+/* Floating Tech Icons */
+.tech-icon {
+    position: absolute;
+    width: 45px; 
+    height: 45px;
+    background: rgba(20, 20, 20, 0.8); /* Thoda dark background icons ke liye */
+    backdrop-filter: blur(5px);
+    border-radius: 10px;
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
+    border: 1px solid var(--neon-primary);
+    animation: floatIcon 3s ease-in-out infinite;
+    z-index: 10;
+}
+
+.icon-1 { top: -10px; left: 10px; color: #3776ab; }
+.icon-2 { top: -10px; right: 10px; color: #00ffcc; animation-delay: 0.5s; }
+.icon-3 { bottom: 20px; right: -20px; color: #f7df1e; animation-delay: 1s; }
+.icon-4 { bottom: 20px; left: -20px; color: #ffffff; animation-delay: 1.5s; }
+
+/* Home section ko thoda aur neeche push karne ke liye */
+#home {
+    padding-top: 50px !important;
+    min-height: auto; /* Taki gap zyada na ho */
+}
+
+/* Animations */
+@keyframes rotateRing { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+@keyframes floatIcon { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+
+    </style>
+</head>
+<body>
+
+    <div class="cursor-glow" id="cursor"></div>
+
+    <div id="canvas-container"></div>
+
+    <nav>
+        <h2 class="neon-text">PC.</h2>
+        <div class="nav-links">
+            <a href="#home">Home</a>
+            <a href="#about">About</a>
+            <a href="#skills">Skills</a>
+            <a href="#projects">Projects</a>
+            <a href="#contact">Contact</a>
+        </div>
+    </nav>
+<div class="photo-wrapper">
+    <div class="photo-container" id="profile-card">
+        <div class="tech-icon icon-1"><i class="fab fa-python"></i></div>
+        <div class="tech-icon icon-2"><i class="fas fa-shield-alt"></i></div>
+        <div class="tech-icon icon-3"><i class="fab fa-js"></i></div>
+        <div class="tech-icon icon-4"><i class="fas fa-code"></i></div>
+        
+        <div class="profile-img-box">
+            <img src="DSC_0015.JPG" alt="Pappu Chaurashiya">
+        </div>
+        
+        <div class="rotating-ring"></div>
+    </div>
+</div>
+    <section id="home">
+        <h3>Welcome to the grid</h3>
+        <h1 class="neon-text hero-title">Pappu Chaurashiya</h1>
+        <div class="typewriter">Cybersecurity | Developer | Entrepreneur</div>
+        <p style="margin-top: 20px; color: var(--text-muted); max-width: 500px;">
+            Building real-world digital solutions from Palwal, Haryana. Merging technical engineering with strategic business operations.
+        </p>
+        <a href="#projects" class="btn click-sound">View Neural Network (Projects)</a>
+    </section>
+
+    <section id="about">
+        <h2 class="neon-text" style="margin-bottom: 2rem;">System.About()</h2>
+        <div class="glass-card gs-reveal">
+            <p style="line-height: 1.8; font-size: 1.1rem;">
+                I am a passionate tech enthusiast pursuing a Diploma in Computer Science Engineering at Raja Jait Singh Government Polytechnic. Alongside my studies, I run my own electronics and hardware business. I specialize in modern web development, cybersecurity, and Python programming. I enjoy building real-world solutions like automated billing systems and intrusion detection tools.
+            </p>
+            <br>
+            <p style="color: var(--neon-primary);">Location: Haryana, India</p>
+        </div>
+    </section>
+
+    <section id="skills">
+        <h2 class="neon-text" style="margin-bottom: 2rem;">Core_Competencies</h2>
+        <div class="skills-grid">
+            <div class="glass-card gs-reveal">
+                <h3><i class="fa-solid fa-code"></i> Development</h3>
+                <p style="margin-top: 10px; color: var(--text-muted);">HTML, CSS, Bootstrap, JavaScript, Modern UI/UX Design, DBMS</p>
+            </div>
+            <div class="glass-card gs-reveal">
+                <h3><i class="fa-solid fa-shield-halved"></i> Security</h3>
+                <p style="margin-top: 10px; color: var(--text-muted);">Ethical Hacking, Intrusion Detection Systems (IDS), Port Scanning, Python Scripting</    <section id="projects">
+        <h2 class="neon-text" style="margin-bottom: 2rem;">Deployed_Modules</h2>
+        <div class="projects-grid">
+            <div class="glass-card gs-reveal">
+                <h3>Automated Billing System</h3>
+                <p style="margin: 10px 0; color: var(--text-muted);">Custom web application for generating warranty invoices and managing shop details.</p>
+                <a href="project-billing.html" target="_blank" class="btn click-sound">Initialize <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
+            <div class="glass-card gs-reveal">
+                <h3>Deepu Hardware Web Portal</h3>
+                <p style="margin: 10px 0; color: var(--text-muted);">A responsive digital storefront to modernize local hardware retail operations.</p>
+                <a href=" https://pappu914.github.io/deepuhardwarestore/#  " target="_blank" class="btn click-sound">Initialize <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
+            <div class="glass-card gs-reveal">
+                <h3>Web-Based biometric</h3>
+                <p style="margin: 10px 0; color: var(--text-muted);">Intrusion Detection System dashboard developed as a comprehensive college project.</p>
+                <a href="biometric.html" target="_blank" class="btn click-sound">Initialize <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
+            <div class="glass-card gs-reveal">
+                <h3>Advanced Port Scanner</h3>
+                <p style="margin: 10px 0; color: var(--text-muted);">Cybersecurity tool designed to map network vulnerabilities and open ports.</p>
+                <a href="port.html" target="_blank" class="btn click-sound">Initialize <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
+            <div class="glass-card gs-reveal">
+                <h3>E-commerce UI</h3>
+                <p style="margin: 10px 0; color: var(--text-muted);">High-fidelity, glassmorphic user interface designed for modern digital storefronts.</p>
+                <a href="project-ecommerce.html" target="_blank" class="btn click-sound">Initialize <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
+            <div class="glass-card gs-reveal">
+                <h3>Real state Website</h3>
+                <p style="margin: 10px 0; color: var(--text-muted);">Scripting utilities to automate repetitive administrative and data management tasks.</p>
+                <a href=" https://pappu914.github.io/shri-shyam-radha-developers/" target="_blank" class="btn click-sound">Initialize <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact">
+        <h2 class="neon-text" style="margin-bottom: 2rem;">Establish_Connection()</h2>
+        <div class="glass-card gs-reveal" style="max-width: 600px; width: 100%;">
+            <form action="#" method="POST">
+                <input type="text" placeholder="Designation / Name" required>
+                <input type="email" placeholder="Secure Email Address" required>
+                <textarea rows="5" placeholder="Transmit Message..." required></textarea>
+                <button type="submit" class="btn click-sound" style="width: 100%;">Send Transmission</button>
+            </form>
+            
+            <div class="contact-footer">
+                <div class="social-links">
+                    <a href="https://www.linkedin.com/in/pappu-kumar-0b79982bb" target="_blank" class="click-sound"><i class="fa-brands fa-linkedin"></i></a>
+                    <a href="mailto:pappuchaurashiya9@gmail.com" class="click-sound"><i class="fa-solid fa-envelope"></i></a>
+                </div>
+                <a href="https://wa.me/917827803510" target="_blank" class="btn btn-whatsapp click-sound"><i class="fa-brands fa-whatsapp"></i> WhatsApp Connect</a>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // --- 1. Custom Cursor (Only active if not on touch screen) ---
+        const cursor = document.getElementById('cursor');
+        // Check if device supports hover (typically false for pure touch devices)
+        if(window.matchMedia("(any-hover: hover)").matches) {
+            document.addEventListener('mousemove', (e) => {
+                cursor.style.left = e.clientX + 'px';
+                cursor.style.top = e.clientY + 'px';
+            });
+            document.addEventListener('mousedown', () => cursor.style.transform = 'translate(-50%, -50%) scale(0.8)');
+            document.addEventListener('mouseup', () => cursor.style.transform = 'translate(-50%, -50%) scale(1)');
+        }
+
+        // --- 2. Sound Effects ---
+        const clickElements = document.querySelectorAll('.click-sound');
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        function playBeep() {
+            if(audioCtx.state === 'suspended') audioCtx.resume();
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            oscillator.type = 'sine';
+            oscillator.frequency.setValueAtTime(880, audioCtx.currentTime); 
+            gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.1);
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            oscillator.start();
+            oscillator.stop(audioCtx.currentTime + 0.1);
+        }
+        clickElements.forEach(el => {
+            el.addEventListener('click', playBeep);
+        });
+
+        // --- 3. GSAP Scroll Animations ---
+        gsap.registerPlugin(ScrollTrigger);
+        gsap.utils.toArray('.gs-reveal').forEach(function(elem) {
+            gsap.fromTo(elem, 
+                { y: 50, opacity: 0 }, 
+                {
+                    y: 0, 
+                    opacity: 1, 
+                    duration: 1, 
+                    ease: "power3.out",
+                    scrollTrigger: {
+                        trigger: elem,
+                        start: "top 85%", 
+                        toggleActions: "play none none reverse"
+                    }
+                }
+            );
+        });
+
+        // --- 4. Three.js Cyberpunk Particle Background ---
+        const scene = new THREE.Scene();
+        scene.fog = new THREE.FogExp2(0x050505, 0.002);
+
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+        
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.getElementById('canvas-container').appendChild(renderer.domElement);
+
+        const particlesGeometry = new THREE.BufferGeometry();
+        const particlesCount = 1500;
+        const posArray = new Float32Array(particlesCount * 3);
+        const colorArray = new Float32Array(particlesCount * 3);
+
+        const color1 = new THREE.Color(0x00ffcc); 
+        const color2 = new THREE.Color(0xff00ff); 
+
+        for(let i = 0; i < particlesCount * 3; i+=3) {
+            posArray[i] = (Math.random() - 0.5) * 20;
+            posArray[i+1] = (Math.random() - 0.5) * 20;
+            posArray[i+2] = (Math.random() - 0.5) * 20;
+
+            const mixedColor = Math.random() > 0.5 ? color1 : color2;
+            colorArray[i] = mixedColor.r;
+            colorArray[i+1] = mixedColor.g;
+            colorArray[i+2] = mixedColor.b;
+        }
+
+        particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+        particlesGeometry.setAttribute('color', new THREE.BufferAttribute(colorArray, 3));
+
+        const particlesMaterial = new THREE.PointsMaterial({
+            size: 0.03,
+            vertexColors: true,
+            blending: THREE.AdditiveBlending,
+            transparent: true
+        });
+
+        const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
+        scene.add(particlesMesh);
+
+        camera.position.z = 5;
+
+        let mouseX = 0;
+        let mouseY = 0;
+        let targetX = 0;
+        let targetY = 0;
+        const windowHalfX = window.innerWidth / 2;
+        const windowHalfY = window.innerHeight / 2;
+
+        document.addEventListener('mousemove', (event) => {
+            mouseX = (event.clientX - windowHalfX);
+            mouseY = (event.clientY - windowHalfY);
+        });
+
+        const clock = new THREE.Clock();
+        function animate() {
+            requestAnimationFrame(animate);
+            const elapsedTime = clock.getElapsedTime();
+
+            particlesMesh.rotation.y = elapsedTime * 0.05;
+            particlesMesh.rotation.x = elapsedTime * 0.02;
+
+            targetX = mouseX * 0.001;
+            targetY = mouseY * 0.001;
+            particlesMesh.rotation.y += 0.05 * (targetX - particlesMesh.rotation.y);
+            particlesMesh.rotation.x += 0.05 * (targetY - particlesMesh.rotation.x);
+
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+        // 3D Tilt Effect for Photo Card
+document.addEventListener('mousemove', (e) => {
+    const x = (window.innerWidth / 2 - e.clientX) / 25;
+    const y = (window.innerHeight / 2 - e.clientY) / 25;
+    
+    const card = document.getElementById('profile-card');
+    if(card) {
+        gsap.to(card, { 
+            rotateY: -x, 
+            rotateX: y, 
+            duration: 0.5, 
+            ease: "power2.out" 
+        });
+    }
+});
+    </script>
+</body>
+</html>

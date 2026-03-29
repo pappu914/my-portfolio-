@@ -1,0 +1,491 @@
+<!DOCTYPE html> 
+<html lang="en"> 
+<head> 
+    <meta charset="UTF-8"> 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+    <title>Deepu Hardware & Electronics Store</title> 
+    <script src="https://cdn.tailwindcss.com"></script> 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"> 
+    <style> 
+        /* Premium Dark Dynamic Background Animation */
+        @keyframes darkGradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        body {
+            background: linear-gradient(-45deg, #0f172a, #1e1b4b, #020617, #172554, #0f172a);
+            background-size: 400% 400%;
+            animation: darkGradientBG 15s ease infinite;
+            color: #e2e8f0;
+        }
+
+        .teal-btn { 
+            background-color: #1ebba3; 
+            color: white; 
+        } 
+
+        /* Enhanced Glassmorphism 3D Cards */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform-style: preserve-3d;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Neon Glow Effect on Hover */
+        .glass-card:hover {
+            transform: translateY(-10px) scale(1.03);
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 20px rgba(30, 187, 163, 0.4), inset 0 0 15px rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(30, 187, 163, 0.5);
+            z-index: 10;
+        }
+
+        /* Double Click Hint Animation */
+        .glass-card::after {
+            content: "Double Click to Buy";
+            position: absolute;
+            bottom: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1ebba3;
+            color: #fff;
+            font-size: 10px;
+            padding: 2px 8px;
+            border-radius: 10px;
+            transition: 0.3s;
+            opacity: 0;
+        }
+        .glass-card:hover::after {
+            bottom: 10px;
+            opacity: 1;
+        }
+
+        /* Modal Overlay */
+        .bot-modal-overlay {
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(8px);
+        }
+
+        /* AI Bot Typing Animation */
+        .typing-indicator span {
+            display: inline-block;
+            width: 5px;
+            height: 5px;
+            background-color: #1ebba3;
+            border-radius: 50%;
+            animation: typing 1s infinite alternate;
+            margin: 0 2px;
+        }
+        .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+        .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes typing {
+            0% { transform: translateY(0); opacity: 0.5; }
+            100% { transform: translateY(-5px); opacity: 1; }
+        }
+
+        /* CSS Logo Design */
+        .logo-box {
+            background: linear-gradient(135deg, #1e1b4b, #111827);
+            border: 2px solid #1ebba3;
+            box-shadow: 0 0 15px rgba(30, 187, 163, 0.5), inset 0 0 5px rgba(255,255,255,0.1);
+            transition: all 0.3s ease;
+        }
+        .logo-box:hover {
+            transform: rotate(5deg) scale(1.05);
+            box-shadow: 0 0 25px rgba(30, 187, 163, 0.8), inset 0 0 10px rgba(255,255,255,0.2);
+            border-color: #ffb88c;
+        }
+    </style> 
+</head> 
+<body class="font-sans"> 
+
+    <div class="bg-gray-900/80 backdrop-blur-md text-gray-300 text-xs sm:text-sm py-2 px-4 sm:px-6 flex flex-col sm:flex-row justify-between items-center space-y-2 sm:space-y-0 shadow-lg border-b border-gray-800"> 
+        <div><i class="fas fa-user mr-2 text-teal-400"></i> Pappu & Santosh</div> 
+        <div class="text-center sm:text-left"> <i class="fas fa-phone-alt mr-2 text-teal-400"></i> +91 7827803510, 9810195698 </div> 
+    </div> 
+
+    <nav class="bg-gray-900/60 backdrop-blur-xl py-4 px-4 sm:px-6 shadow-2xl flex justify-between items-center sticky top-0 z-50 border-b border-gray-800"> 
+        <div class="flex items-center space-x-3"> 
+            
+          <div class="relative group cursor-pointer">
+    <div class="absolute -inset-1 bg-gradient-to-r from-teal-500 to-blue-600 rounded-full blur opacity-30 group-hover:opacity-60 transition duration-500"></div>
+    
+    <div class="relative h-14 w-14 rounded-full border-2 border-teal-400/50 overflow-hidden shadow-2xl transform group-hover:scale-110 transition-all duration-300">
+        <img src="image/image.png" alt="Deepu Hardware Logo" class="h-full w-full object-cover">
+        
+        <div class="absolute inset-0 bg-gray-800 flex items-center justify-center text-teal-400 font-bold text-xs opacity-0 hover:opacity-100 transition-opacity">
+            PHOTO
+        </div>
+    </div>
+    
+    <div class="absolute -bottom-1 -right-1 bg-teal-500 text-white text-[8px] h-4 w-4 rounded-full flex items-center justify-center border border-gray-900 shadow-lg">
+        <i class="fas fa-check"></i>
+    </div>
+</div>
+
+            <div class="flex flex-col">
+                <span class="text-lg md:text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-orange-400 leading-none" style="text-shadow: 0 0 10px rgba(239,68,68,0.2);">DEEPU HARDWARE</span>
+                <span class="text-[10px] text-teal-400 font-bold tracking-[0.2em] uppercase mt-1 hidden md:block">& ELECTRONICS STORE</span>
+            </div>
+        </div> 
+        <div class="hidden md:flex items-center space-x-8 text-gray-300 font-medium"> 
+            <a href="#" class="hover:text-teal-400 transition">Home</a> 
+            <a href="#categories" class="hover:text-teal-400 transition">Products</a> 
+            <a href="#special" class="hover:text-teal-400 transition">Services</a> 
+            <a href="#contact" class="hover:text-teal-400 transition">Contact</a> 
+            <a href="billing.html" class="teal-btn px-4 py-2 rounded-full font-medium transition text-sm shadow-[0_0_10px_rgba(30,187,163,0.4)] hover:shadow-[0_0_20px_rgba(30,187,163,0.8)]"> Admin <i class="fas fa-lock ml-1"></i> </a> 
+        </div> 
+        <div class="md:hidden flex items-center space-x-3"> 
+            <a href="billing.html" class="teal-btn px-3 py-1.5 rounded-full font-medium transition text-xs"> Admin <i class="fas fa-lock ml-1"></i> </a> 
+            <button id="mobile-menu-btn" class="text-gray-300 focus:outline-none p-2 hover:text-teal-400 transition"> 
+                <i class="fas fa-bars text-2xl"></i> 
+            </button> 
+        </div> 
+    </nav> 
+
+    <div id="mobile-menu" class="hidden md:hidden bg-gray-900/95 backdrop-blur-md shadow-2xl border-t border-gray-800 absolute w-full z-40"> 
+        <div class="flex flex-col px-6 py-4 space-y-4 text-gray-300 font-medium text-center"> 
+            <a href="#" class="hover:text-teal-400 border-b border-gray-800 pb-2">Home</a> 
+            <a href="#categories" class="hover:text-teal-400 border-b border-gray-800 pb-2">Products</a> 
+            <a href="#special" class="hover:text-teal-400 border-b border-gray-800 pb-2">Services</a> 
+            <a href="#contact" class="hover:text-teal-400 pb-2">Contact</a> 
+        </div> 
+    </div> 
+
+    <section class="py-10 px-4 md:px-16 pb-24 relative"> 
+        <div class="max-w-6xl mx-auto text-center mb-10"> 
+            <div class="inline-block bg-teal-500/20 text-teal-300 border border-teal-500/30 px-4 py-1 rounded-full text-xs font-bold mb-4 animate-pulse">
+                <i class="fas fa-mouse-pointer mr-1"></i> Double Click any item to auto-order via AI Bot
+            </div>
+           <h1 class="text-3xl sm:text-4xl md:text-5xl font-extrabold 
+text-transparent bg-clip-text bg-gradient-to-r 
+from-teal-300 to-blue-500 mb-4 
+leading-[1.3] pt-2 drop-shadow-lg">
+
+हार्डवेयर और इलेक्ट्रॉनिक्स का सभी सामान <br>
+
+<span class="text-yellow-400 mt-2 inline-block 
+drop-shadow-[0_0_10px_rgba(250,204,21,0.5)]">
+थोक रेट पर!
+</span>
+
+</h1>
+            <p class="text-sm sm:text-lg text-gray-300 font-medium bg-black/40 backdrop-blur-sm border border-white/10 inline-block px-5 py-2 rounded-full leading-relaxed shadow-lg"> 
+                हमारे यहाँ पर समरसिबल, पानी की फिटिंग व पेन्ट उपलब्ध है। 
+            </p> 
+        </div> 
+
+        <div class="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 relative z-20"> 
+            <div class="p-2 sm:p-3 rounded-2xl glass-card" data-product="Submersible Pump"> 
+                <img src="image/Types-of-Submersible-Pumps.jpg" alt="Submersible Pump" class="rounded-xl object-cover h-24 sm:h-40 w-full opacity-90"> 
+            </div> 
+            <div class="p-2 sm:p-3 rounded-2xl glass-card" data-product="Plumbing Pipes"> 
+                <img src="image/PIPE.png" alt="Plumbing Pipes" class="rounded-xl object-cover h-24 sm:h-40 w-full opacity-90"> 
+            </div> 
+            <div class="p-2 sm:p-3 rounded-2xl glass-card" data-product="Paints"> 
+                <img src="image/PAINT.webp" alt="Paints" class="rounded-xl object-cover h-24 sm:h-40 w-full opacity-90"> 
+            </div> 
+            <div class="p-2 sm:p-3 rounded-2xl glass-card" data-product="Wires & Cables"> 
+                <img src="image/BIJLI.webp" alt="Wires" class="rounded-xl object-cover h-24 sm:h-40 w-full opacity-90"> 
+            </div> 
+        </div> 
+    </section> 
+
+    <main class="max-w-6xl mx-auto px-4 md:px-8 -mt-12 relative z-10 bg-gray-900/40 backdrop-blur-xl rounded-t-[40px] shadow-[0_-10px_40px_rgba(0,0,0,0.5)] pb-12 border-t border-white/10"> 
+        
+        <section class="pt-10 sm:pt-14 mb-10" id="special"> 
+            <div class="bg-gradient-to-r from-pink-900/40 to-transparent border-l-4 border-pink-500 p-5 sm:p-6 rounded-r-2xl glass-card"> 
+                <div class="flex flex-col sm:flex-row items-center sm:items-start text-center sm:text-left"> 
+                    <div class="bg-pink-500/20 p-3 rounded-full sm:mr-4 mb-3 sm:mb-0">
+                        <i class="fas fa-tools text-3xl text-pink-400 drop-shadow-[0_0_10px_rgba(244,114,182,0.6)]"></i> 
+                    </div>
+                    <div> 
+                        <h3 class="text-xl font-bold text-gray-100">विशेष प्रबन्ध (Special Service)</h3> 
+                        <p class="text-base sm:text-lg text-pink-300 font-medium mt-1">नोट:- हमारे यहाँ पर कुशल कारीगरों का विशेष प्रबन्ध है।</p> 
+                    </div> 
+                </div> 
+            </div> 
+        </section> 
+
+        <section class="mb-14" id="categories"> 
+            <h2 class="text-xl sm:text-3xl font-bold mb-8 text-white border-b border-gray-700 pb-3 inline-block">हमारे प्रमुख प्रोडक्ट्स</h2> 
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-4 sm:gap-6"> 
+                <div class="p-5 sm:p-6 rounded-2xl flex flex-col items-center justify-center text-center glass-card group" data-product="समरसिबल (Submersible)"> 
+                    <i class="fas fa-water text-4xl text-blue-400 mb-3 group-hover:scale-110 transition drop-shadow-[0_0_10px_rgba(96,165,250,0.8)]"></i> 
+                    <h3 class="font-bold text-sm sm:text-base text-gray-200">समरसिबल <br class="md:hidden">(Submersible)</h3> 
+                </div> 
+                <div class="p-5 sm:p-6 rounded-2xl flex flex-col items-center justify-center text-center glass-card group" data-product="पानी की फिटिंग (Plumbing)"> 
+                    <i class="fas fa-faucet text-4xl text-gray-300 mb-3 group-hover:scale-110 transition drop-shadow-[0_0_10px_rgba(209,213,219,0.8)]"></i> 
+                    <h3 class="font-bold text-sm sm:text-base text-gray-200">पानी की फिटिंग <br class="md:hidden">(Plumbing)</h3> 
+                </div> 
+                <div class="p-5 sm:p-6 rounded-2xl flex flex-col items-center justify-center text-center glass-card group" data-product="पेन्ट (Paints)"> 
+                    <i class="fas fa-paint-roller text-4xl text-teal-400 mb-3 group-hover:scale-110 transition drop-shadow-[0_0_10px_rgba(45,212,191,0.8)]"></i> 
+                    <h3 class="font-bold text-sm sm:text-base text-gray-200">पेन्ट <br class="md:hidden">(Paints)</h3> 
+                </div> 
+                <div class="p-5 sm:p-6 rounded-2xl flex flex-col items-center justify-center text-center glass-card group" data-product="इलेक्ट्रॉनिक्स (Electricals)"> 
+                    <i class="fas fa-lightbulb text-4xl text-yellow-400 mb-3 group-hover:scale-110 transition drop-shadow-[0_0_10px_rgba(250,204,21,0.8)]"></i> 
+                    <h3 class="font-bold text-sm sm:text-base text-gray-200">इलेक्ट्रॉनिक्स <br class="md:hidden">(Electricals)</h3> 
+                </div> 
+                <div class="p-5 sm:p-6 rounded-2xl flex flex-col items-center justify-center text-center glass-card group md:col-span-1 col-span-2" data-product="हार्डवेयर (Hardware)"> 
+                    <i class="fas fa-hammer text-4xl text-orange-400 mb-3 group-hover:scale-110 transition drop-shadow-[0_0_10px_rgba(251,146,60,0.8)]"></i> 
+                    <h3 class="font-bold text-sm sm:text-base text-gray-200">हार्डवेयर <br class="md:hidden">(Hardware)</h3> 
+                </div> 
+            </div> 
+        </section> 
+<section class="mb-12">
+    <div class="glass-card p-6 rounded-[30px] border border-blue-500/30 bg-gradient-to-br from-blue-900/20 to-transparent flex flex-col md:flex-row items-center justify-between group overflow-hidden relative">
+        
+        <div class="absolute -right-10 -top-10 w-32 h-32 bg-blue-500/10 rounded-full blur-3xl group-hover:scale-150 transition-all duration-700"></div>
+
+        <div class="text-center md:text-left mb-6 md:mb-0 relative z-10">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" alt="Google" class="h-8 mx-auto md:mx-0 mb-3 drop-shadow-md">
+            <h3 class="text-2xl font-bold text-white mb-2">हमें गूगल पर रेट करें!</h3>
+            <p class="text-gray-400 text-sm max-w-xs leading-relaxed">
+                आपकी एक छोटी सी रेटिंग हमारे व्यापार को बढ़ने में मदद करती है। 
+                कृपया नीचे दिए गए बटन पर क्लिक करें या QR कोड स्कैन करें।
+            </p>
+            
+            <a href="https://g.page/r/CTaqvvUTcn35EAI/review" target="_blank" class="mt-5 inline-flex items-center bg-white text-gray-900 font-bold px-6 py-3 rounded-xl hover:bg-blue-50 transition-transform hover:scale-105 shadow-[0_0_20px_rgba(255,255,255,0.2)]">
+                Write a Review on Google <i class="fab fa-google ml-2 text-red-500"></i>
+            </a>
+        </div>
+
+        <div class="relative group cursor-pointer">
+            <div class="absolute -inset-2 bg-gradient-to-r from-red-500 via-blue-500 to-yellow-500 rounded-2xl blur opacity-25 group-hover:opacity-60 transition duration-500"></div>
+            <div class="relative bg-white p-3 rounded-2xl shadow-2xl transform group-hover:rotate-2 transition-transform duration-300">
+                <img src="image/frame.png" alt="Google QR Code" class="h-40 w-40 object-contain">
+                <p class="text-[10px] text-gray-500 text-center font-bold mt-2 uppercase tracking-tighter">Scan to Review</p>
+            </div>
+        </div>
+    </div>
+</section>
+        <section class="mb-8"> 
+            <h2 class="text-xl sm:text-3xl font-bold mb-8 text-white border-b border-gray-700 pb-3 inline-block">Customer Reviews (5.0 ⭐️)</h2> 
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8"> 
+                <div class="p-6 sm:p-8 rounded-2xl glass-card" data-product="None"> 
+                    <div class="flex items-center mb-4"> 
+                        <div class="bg-gray-800 p-2 rounded-full mr-4 shadow-inner">
+                            <i class="fas fa-user-circle text-4xl text-teal-400"></i> 
+                        </div>
+                        <div> 
+                            <span class="font-bold text-lg text-white">Om G.</span> 
+                            <div class="text-yellow-400 text-sm mt-1 drop-shadow-[0_0_5px_rgba(250,204,21,0.8)]"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div> 
+                        </div> 
+                    </div> 
+                    <p class="text-gray-300 italic text-lg leading-relaxed">"Best"</p> 
+                </div> 
+                <div class="p-6 sm:p-8 rounded-2xl glass-card" data-product="None"> 
+                    <div class="flex items-center mb-4"> 
+                        <div class="bg-gray-800 p-2 rounded-full mr-4 shadow-inner">
+                            <i class="fas fa-user-circle text-4xl text-teal-400"></i> 
+                        </div>
+                        <div> 
+                            <span class="font-bold text-lg text-white">Piyush A.</span> 
+                            <div class="text-yellow-400 text-sm mt-1 drop-shadow-[0_0_5px_rgba(250,204,21,0.8)]"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div> 
+                        </div> 
+                    </div> 
+                    <p class="text-gray-300 italic text-lg leading-relaxed">"This is excellent website and hardware store. Highly recommended."</p> 
+                </div> 
+            </div> 
+        </section> 
+    </main> 
+
+    <footer class="bg-black/80 backdrop-blur-md border-t border-gray-800 text-gray-300 py-12 px-6 relative z-10" id="contact"> 
+        <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8"> 
+            <div class="text-center md:text-left"> 
+                <h3 class="text-2xl font-bold text-teal-400 mb-4 drop-shadow-[0_0_8px_rgba(45,212,191,0.4)]">Deepu Hardware & Electronics Store</h3> 
+                <p class="text-gray-400 mb-2 font-medium">Pappu & Santosh</p> 
+                <p class="text-gray-400 mb-4 leading-relaxed">समरसिबल, पानी की फिटिंग व पेन्ट और हार्डवेयर का सभी सामान थोक रेट पर मिलता है।</p> 
+                <div class="flex justify-center md:justify-start space-x-4 text-xl"> 
+                    <a href="https://wa.me/917827803510" target="_blank" class="text-green-500 hover:text-green-400 hover:scale-110 transition inline-block"><i class="fab fa-whatsapp drop-shadow-[0_0_8px_rgba(34,197,94,0.5)]"></i> WhatsApp</a> 
+                </div> 
+            </div> 
+            <div class="flex flex-col space-y-4 text-center md:text-left"> 
+                <h4 class="text-lg font-bold text-white tracking-wide">Contact Info</h4> 
+                <div class="flex flex-col md:flex-row items-center md:items-start group"> 
+                    <i class="fas fa-map-marker-alt md:mt-1 md:mr-3 text-teal-400 mb-2 md:mb-0 group-hover:animate-bounce"></i> 
+                    <span class="text-gray-400 text-sm sm:text-base leading-relaxed"> न्यू दुर्गा कालोनी, गांव हरफली,<br> छपरौला रोड़, जिला पलवल<br> (New Durga Colony, Village Harfali, Chhaprola Road, Dist. Palwal) </span> 
+                </div> 
+                <div class="flex flex-col md:flex-row items-center md:mt-3 group"> 
+                    <i class="fas fa-phone-alt md:mr-3 text-teal-400 mb-2 md:mb-0 group-hover:rotate-12 transition"></i> 
+                    <span class="text-gray-400 text-sm sm:text-base">+91 7827803510 <br class="hidden md:block"> +91 9810195698</span> 
+                </div> 
+            </div> 
+            <div class="text-center md:text-left"> 
+                <h4 class="text-lg font-bold mb-4 text-white tracking-wide">Timings & Link</h4> 
+                <div class="flex justify-center md:justify-start items-center mb-4 text-gray-400 text-sm sm:text-base"> 
+                    <i class="fas fa-clock mr-3 text-teal-400 animate-pulse"></i> <span>Mon - Sun: 9:00 AM - 9:00 PM</span> 
+                </div> 
+            </div> 
+        </div> 
+        <div class="text-center text-gray-600 text-xs sm:text-sm mt-12 border-t border-gray-800 pt-6"> 
+            © 2024 Deepu Hardware & Electronics Store. All rights reserved. 
+        </div> 
+    </footer> 
+
+    <div id="ai-modal" class="hidden fixed inset-0 z-[100] flex items-center justify-center bot-modal-overlay px-4">
+        <div class="bg-gray-900 border border-teal-500/50 rounded-2xl shadow-[0_0_40px_rgba(20,184,166,0.3)] max-w-sm w-full overflow-hidden transform transition-all">
+            
+            <div class="bg-gray-800 p-4 border-b border-gray-700 flex justify-between items-center">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-full bg-teal-500/20 flex items-center justify-center border border-teal-500/50">
+                        <i class="fas fa-robot text-teal-400 text-xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-white font-bold">Deepu AI Bot</h3>
+                        <p class="text-teal-400 text-xs flex items-center"><span class="w-2 h-2 bg-teal-400 rounded-full mr-1 animate-pulse"></span> Online</p>
+                    </div>
+                </div>
+                <button id="close-modal" class="text-gray-400 hover:text-white transition"><i class="fas fa-times text-xl"></i></button>
+            </div>
+
+            <div class="p-5 space-y-4">
+                <div class="bg-gray-800 p-3 rounded-lg rounded-tl-none border border-gray-700 text-gray-200 text-sm shadow-sm inline-block max-w-[90%]">
+                    नमस्ते! आपने <strong id="selected-product-text" class="text-teal-400">...</strong> चुना है। ऑर्डर आगे बढ़ाने के लिए कृपया अपना नाम बताएं।
+                </div>
+
+                <div id="loading-bot" class="hidden">
+                    <div class="bg-gray-800 p-3 rounded-lg rounded-tl-none border border-gray-700 text-gray-200 text-sm shadow-sm inline-block">
+                        <div class="typing-indicator flex items-center h-4">
+                            <span></span><span></span><span></span>
+                        </div>
+                    </div>
+                    <p id="bot-status-text" class="text-xs text-gray-400 mt-2 ml-1">Fetching Location...</p>
+                </div>
+
+                <div class="mt-4 pt-4 border-t border-gray-800">
+                    <label class="text-xs text-gray-400 mb-1 block">Your Name</label>
+                    <input type="text" id="userName" placeholder="अपना नाम यहाँ लिखें..." class="w-full bg-gray-950 border border-gray-700 text-white px-4 py-3 rounded-lg focus:outline-none focus:border-teal-500 transition">
+                </div>
+            </div>
+
+            <div class="p-4 bg-gray-950">
+                <button id="proceed-btn" class="w-full bg-gradient-to-r from-teal-500 to-blue-600 text-white font-bold py-3 rounded-lg hover:shadow-[0_0_15px_rgba(20,184,166,0.6)] transition flex justify-center items-center">
+                    Proceed to WhatsApp <i class="fab fa-whatsapp ml-2 text-xl"></i>
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <script> 
+        // Mobile Menu Logic
+        const btn = document.getElementById('mobile-menu-btn'); 
+        const menu = document.getElementById('mobile-menu'); 
+        const icon = btn.querySelector('i'); 
+
+        btn.addEventListener('click', () => { 
+            menu.classList.toggle('hidden'); 
+            if(menu.classList.contains('hidden')) { 
+                icon.classList.remove('fa-times'); icon.classList.add('fa-bars'); 
+            } else { 
+                icon.classList.remove('fa-bars'); icon.classList.add('fa-times'); 
+            } 
+        }); 
+
+        const mobileLinks = menu.querySelectorAll('a'); 
+        mobileLinks.forEach(link => { 
+            link.addEventListener('click', () => { 
+                menu.classList.add('hidden'); 
+                icon.classList.remove('fa-times'); icon.classList.add('fa-bars'); 
+            }); 
+        }); 
+
+        // AI Bot & Double Click Logic
+        const cards = document.querySelectorAll('.glass-card');
+        const modal = document.getElementById('ai-modal');
+        const closeModal = document.getElementById('close-modal');
+        const proceedBtn = document.getElementById('proceed-btn');
+        const productTextSpan = document.getElementById('selected-product-text');
+        const loadingBot = document.getElementById('loading-bot');
+        const botStatusText = document.getElementById('bot-status-text');
+        
+        let currentProduct = '';
+
+        // Add Double click to all cards
+        cards.forEach(card => {
+            card.addEventListener('dblclick', function() {
+                const product = this.getAttribute('data-product');
+                if(product && product !== "None") {
+                    currentProduct = product;
+                    productTextSpan.innerText = currentProduct;
+                    modal.classList.remove('hidden');
+                    document.getElementById('userName').value = ''; // clear input
+                    loadingBot.classList.add('hidden');
+                    proceedBtn.disabled = false;
+                    proceedBtn.classList.remove('opacity-50');
+                }
+            });
+        });
+
+        // Close Modal
+        closeModal.addEventListener('click', () => {
+            modal.classList.add('hidden');
+        });
+
+        // Proceed to WhatsApp with Location
+        proceedBtn.addEventListener('click', () => {
+            const userName = document.getElementById('userName').value.trim();
+            
+            if(!userName) {
+                alert("कृपया पहले अपना नाम दर्ज करें। (Please enter your name)");
+                return;
+            }
+
+            // Show loading animation
+            loadingBot.classList.remove('hidden');
+            botStatusText.innerText = "📍 आपकी लोकेशन निकाली जा रही है...";
+            proceedBtn.disabled = true;
+            proceedBtn.classList.add('opacity-50');
+
+            // Fetch Geolocation
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const lat = position.coords.latitude;
+                        const lon = position.coords.longitude;
+                        const mapLink = `http://maps.google.com/?q=${lat},${lon}`;
+                        sendToWhatsApp(userName, currentProduct, mapLink);
+                    },
+                    (error) => {
+                        // If user blocks location or error happens
+                        sendToWhatsApp(userName, currentProduct, "Location not provided");
+                    },
+                    { enableHighAccuracy: true, timeout: 5000 }
+                );
+            } else {
+                sendToWhatsApp(userName, currentProduct, "Geolocation not supported");
+            }
+        });
+
+        function sendToWhatsApp(name, product, location) {
+            botStatusText.innerText = "✅ आपको WhatsApp पर भेजा जा रहा है...";
+            
+            setTimeout(() => {
+                const phoneNumber = "917827803510";
+                const message = `नमस्कार ,\n\nमेरा नाम: *${name}*\nमुझे इस प्रोडक्ट की जानकारी चाहिए/ऑर्डर करना है: *${product}*\n\n📍 मेरी लोकेशन: ${location}`;
+                
+                const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+                
+                window.open(whatsappURL, '_blank');
+                
+                // reset and close modal
+                modal.classList.add('hidden');
+                loadingBot.classList.add('hidden');
+                proceedBtn.disabled = false;
+                proceedBtn.classList.remove('opacity-50');
+            }, 1000); 
+        }
+
+    </script> 
+</body> 
+</html>

@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biometric Authentication</title>
+    <style>
+        :root {
+            --bg-color: #0b0f19;
+            --primary-glow: #00d2ff;
+            --success-glow: #00ff88;
+            --text-color: #ffffff;
+            --scanner-size: 150px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: var(--bg-color);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+        }
+
+        .auth-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2rem;
+            padding: 2rem;
+            border-radius: 24px;
+            background: rgba(255, 255, 255, 0.02);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.5s ease;
+        }
+
+        /* Scanner Wrapper */
+        .scanner-wrapper {
+            position: relative;
+            width: var(--scanner-size);
+            height: var(--scanner-size);
+            cursor: pointer;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .scanner-wrapper:hover {
+            transform: scale(1.05);
+        }
+
+        .scanner-wrapper:active {
+            transform: scale(0.95);
+        }
+
+        /* Fingerprint SVG */
+        .fingerprint-icon {
+            width: 80%;
+            height: 80%;
+            fill: transparent;
+            stroke: rgba(255, 255, 255, 0.2);
+            stroke-width: 2;
+            stroke-linecap: round;
+            z-index: 2;
+            transition: all 0.5s ease;
+        }
+
+        /* Pulsing Background Rings */
+        .ring {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 2px solid var(--primary-glow);
+            opacity: 0;
+            box-shadow: 0 0 20px var(--primary-glow);
+        }
+
+        /* The Laser Scan Line */
+        .scan-line {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--primary-glow);
+            box-shadow: 0 0 15px 5px var(--primary-glow);
+            opacity: 0;
+            z-index: 3;
+            border-radius: 50%;
+        }
+
+        /* Status Text */
+        .status-text {
+            color: var(--text-color);
+            font-size: 1.2rem;
+            font-weight: 300;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            transition: color 0.3s ease;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+        }
+
+        /* --- ANIMATION STATES --- */
+
+        /* 1. Idle State (Breathing) */
+        .scanner-wrapper.is-idle .fingerprint-icon {
+            animation: breathe 3s infinite ease-in-out;
+        }
+
+        /* 2. Scanning State */
+        .scanner-wrapper.is-scanning .fingerprint-icon {
+            stroke: var(--primary-glow);
+            filter: drop-shadow(0 0 10px var(--primary-glow));
+        }
+
+        .scanner-wrapper.is-scanning .scan-line {
+            opacity: 1;
+            animation: scan-move 2s infinite linear;
+        }
+
+        .scanner-wrapper.is-scanning .ring {
+            animation: ripple 1.5s infinite cubic-bezier(0.21, 0.53, 0.56, 0.8);
+        }
+
+        /* 3. Authenticated State */
+        .scanner-wrapper.is-authenticated .fingerprint-icon {
+            stroke: var(--success-glow);
+            filter: drop-shadow(0 0 15px var(--success-glow));
+            transform: scale(1.1);
+        }
+
+        .scanner-wrapper.is-authenticated .ring {
+            border-color: var(--success-glow);
+            box-shadow: 0 0 30px var(--success-glow);
+            animation: success-burst 0.6s ease-out forwards;
+        }
+
+        /* --- KEYFRAMES --- */
+        @keyframes breathe {
+            0%, 100% { stroke: rgba(255, 255, 255, 0.2); }
+            50% { stroke: rgba(255, 255, 255, 0.5); }
+        }
+
+        @keyframes scan-move {
+            0% { top: 0; opacity: 0; }
+            10% { opacity: 1; }
+            50% { top: 100%; opacity: 1; }
+            90% { opacity: 1; }
+            100% { top: 0; opacity: 0; }
+        }
+
+        @keyframes ripple {
+            0% { transform: scale(0.8); opacity: 1; }
+            100% { transform: scale(1.8); opacity: 0; }
+        }
+
+        @keyframes success-burst {
+            0% { transform: scale(1); opacity: 1; border-width: 5px; }
+            100% { transform: scale(1.5); opacity: 0; border-width: 1px; }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 480px) {
+            :root {
+                --scanner-size: 120px;
+            }
+            .status-text {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="auth-container">
+        <div class="scanner-wrapper is-idle" id="scanner">
+            <svg class="fingerprint-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2C8.686 2 6 4.686 6 8v1.5a.5.5 0 0 1-1 0V8c0-3.866 3.134-7 7-7s7 3.134 7 7v4.5a.5.5 0 0 1-1 0V8c0-3.314-2.686-6-6-6z"/>
+                <path d="M9 8c0-1.657 1.343-3 3-3s3 1.343 3 3v6.5a.5.5 0 0 1-1 0V8c0-1.105-.895-2-2-2s-2 .895-2 2v3.5a.5.5 0 0 1-1 0V8z"/>
+                <path d="M12 9.5a1.5 1.5 0 0 0-1.5 1.5v4.5a.5.5 0 0 0 1 0V11a.5.5 0 0 1 1 0v6.5a.5.5 0 0 0 1 0V11a1.5 1.5 0 0 0-1.5-1.5z"/>
+                <path d="M5.5 12.5a.5.5 0 0 0-.5.5v2a6.5 6.5 0 0 0 13 0v-2a.5.5 0 0 0-1 0v2a5.5 5.5 0 0 1-11 0v-2a.5.5 0 0 0-.5-.5z"/>
+                <path d="M7.5 15.5a.5.5 0 0 0-.5.5 5 5 0 0 0 10 0 .5.5 0 0 0-1 0 4 4 0 0 1-8 0 .5.5 0 0 0-.5-.5z"/>
+            </svg>
+            
+            <div class="ring"></div>
+            <div class="scan-line"></div>
+        </div>
+        
+        <p class="status-text" id="status">Touch to Authenticate</p>
+    </div>
+
+    <script>
+        const scanner = document.getElementById('scanner');
+        const statusText = document.getElementById('status');
+        let isAuthenticating = false;
+
+        scanner.addEventListener('click', () => {
+            // Prevent spam clicks during animation
+            if (isAuthenticating) return;
+            isAuthenticating = true;
+
+            // 1. Switch to Scanning State
+            scanner.classList.remove('is-idle');
+            scanner.classList.add('is-scanning');
+            statusText.textContent = "Verifying Identity...";
+            statusText.style.color = "var(--primary-glow)";
+
+            // 2. Simulate Authentication Delay (3 seconds)
+            setTimeout(() => {
+                scanner.classList.remove('is-scanning');
+                scanner.classList.add('is-authenticated');
+                statusText.textContent = "Access Granted";
+                statusText.style.color = "var(--success-glow)";
+
+                // 3. Reset back to Idle after 3 seconds
+                setTimeout(() => {
+                    scanner.classList.remove('is-authenticated');
+                    scanner.classList.add('is-idle');
+                    statusText.textContent = "Touch to Authenticate";
+                    statusText.style.color = "var(--text-color)";
+                    isAuthenticating = false;
+                }, 3000);
+
+            }, 3000); // Time the scanning laser runs
+        });
+    </script>
+
+</body>
+</html>

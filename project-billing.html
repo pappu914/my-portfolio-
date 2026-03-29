@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deepu Hardware STORE</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --p: #00d2ff; --a: #00e676; --d: #ff4757; --wa: #25D366;
+            --g: rgba(255, 255, 255, 0.1); --gb: rgba(255, 255, 255, 0.2); --bg: #0f172a;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { background: var(--bg); color: white; min-height: 100vh; }
+
+        #login-screen { position: fixed; inset: 0; z-index: 10000; display: flex; align-items: center; justify-content: center; background: rgba(15, 23, 42, 0.98); backdrop-filter: blur(15px); }
+        .login-box { background: rgba(255, 255, 255, 0.05); padding: 2.5rem; border-radius: 24px; border: 1px solid var(--gb); text-align: center; width: 350px; }
+
+        #dashboard { display: none; height: 100vh; }
+        .sidebar { width: 260px; background: rgba(0, 0, 0, 0.3); border-right: 1px solid var(--gb); padding: 20px; display: flex; flex-direction: column; }
+        .main { flex: 1; padding: 30px; overflow-y: auto; }
+
+        .nav-link { padding: 15px; margin: 10px 0; border-radius: 12px; cursor: pointer; color: #94a3b8; border: 1px solid transparent; transition: 0.3s; }
+        .nav-link.active { background: var(--g); color: white; border-color: var(--p); }
+        .card { background: var(--g); border: 1px solid var(--gb); border-radius: 20px; padding: 25px; margin-bottom: 20px; }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th { text-align: left; padding: 12px; color: var(--p); border-bottom: 1px solid var(--gb); text-transform: uppercase; font-size: 0.8rem; }
+        td { padding: 12px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
+        input { background: rgba(0, 0, 0, 0.2); border: 1px solid var(--gb); color: white; padding: 8px; border-radius: 8px; width: 100%; outline: none; }
+
+        .btn { padding: 12px 20px; border-radius: 10px; border: none; cursor: pointer; font-weight: 600; transition: 0.2s; text-align: center; }
+        .btn-p { background: var(--p); color: #000; }
+        .btn-d { background: var(--d); color: white; }
+        .btn-wa { background: var(--wa); color: white; width: 100%; margin-top: 10px; display: block; }
+        
+        .bill-footer { display: flex; justify-content: space-between; margin-top: 40px; border-top: 1px dashed var(--gb); padding-top: 20px; }
+        .qr-box { text-align: center; background: white; padding: 8px; border-radius: 12px; display: inline-block; }
+        .qr-box img { width: 110px; height: 110px; }
+
+        /* --- PRINT FIXES --- */
+        @media print {
+            @page { size: auto; margin: 10mm; }
+            body { background: white !important; color: black !important; height: auto; }
+            .no-print, .sidebar, .btn { display: none !important; }
+            #dashboard { display: block !important; height: auto !important; }
+            .main { padding: 0; overflow: visible !important; }
+            .card { border: none !important; background: transparent !important; padding: 0 !important; color: black !important; }
+            input { border: none !important; background: transparent !important; color: black !important; font-size: 1rem !important; appearance: none; -moz-appearance: none; }
+            th { color: black !important; border-bottom: 2px solid black !important; }
+            td { color: black !important; border-bottom: 1px solid #eee !important; }
+            .bill-footer { border-top: 2px solid black !important; page-break-inside: avoid; }
+            #grandTotal, #billNoDisplay { color: black !important; }
+            h1, h2, h3, p, span { color: black !important; }
+            /* Ensure text doesn't hide */
+            input::placeholder { color: transparent; }
+        }
+    </style>
+</head>
+<body onload="initApp()">
+
+    <datalist id="item-list"></datalist>
+
+    <div id="login-screen">
+        <div class="login-box">
+            <h2 style="color: var(--p);">Deepu Hardware Store</h2>
+            <input type="password" id="passInput" placeholder="••••" style="font-size: 1.5rem; text-align: center; letter-spacing: 8px; margin: 20px 0;">
+            <button class="btn btn-p" style="width:100%" onclick="login()">Secure Login</button>
+        </div>
+    </div>
+
+    <div id="dashboard">
+        <div class="sidebar no-print">
+            <h3 style="color: var(--p); text-align: center; margin-bottom: 30px;">DH&E STORE </h3>
+            <div class="nav-link active" onclick="switchTab('billing', this)">📝 New Bill</div>
+            <div class="nav-link" onclick="switchTab('inventory', this)">📦 Inventory</div>
+            <div class="nav-link" onclick="switchTab('history', this)">🕒 History</div>
+            <button class="btn btn-d" style="margin-top: auto;" onclick="location.reload()">Logout</button>
+        </div>
+
+        <div class="main">
+            <div id="billing" class="tab-content">
+                <div class="card" id="printableBill">
+                    <div style="display: flex; justify-content: space-between; align-items: start;">
+                        <div>
+                            <h1 style="color: var(--p); font-size: 1rem;">Deepu Hardware & Electronics Store</h1>
+                            <p style="opacity: 0.8;">Durga Colony, Palwal | +91 7827803510</p>
+                        </div>
+                        <div style="text-align: right;">
+                            <h2 id="billNoDisplay" style="color: var(--a);">Bill No: --</h2>
+                            <input type="text" id="custName" placeholder="Customer Name" style="margin: 10px 0; border: 1px solid var(--gb);">
+                            <p>Date: <span id="currentDate"></span></p>
+                        </div>
+                    </div>
+
+                    <table id="billTable">
+                        <thead>
+                            <tr>
+                                <th style="width: 40%;">Item Name</th>
+                                <th>Qty</th>
+                                <th>Rate (₹)</th>
+                                <th>Warranty</th>
+                                <th style="text-align: right;">Total</th>
+                                <th class="no-print"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="billBody"></tbody>
+                    </table>
+                    
+                    <button class="btn no-print" style="margin-top:15px; background:var(--gb);" onclick="addRow()">+ Add Item</button>
+
+                    <div style="text-align: right; margin-top: 30px;">
+                        <p style="font-size: 0.8rem; text-transform: uppercase;">Grand Total</p>
+                        <h1 style="font-size: 3.5rem; color: var(--a);">₹ <span id="grandTotal">0</span></h1>
+                    </div>
+
+                    <div class="bill-footer">
+                        <div style="width: 65%;">
+                            <h4 style="color: var(--p); margin-bottom: 5px;">Notes & Terms:</h4>
+                            <p style="font-size: 0.8rem; opacity: 0.8;">
+                                1. Goods once sold will not be taken back.<br>
+                                2. Warranty provided as per company policy.<br>
+                                3. Subject to Palwal Jurisdiction.
+                            </p>
+                        </div>
+                        <div style="text-align: center;">
+                            <p style="font-size: 0.7rem; color: var(--a); font-weight: bold;">SCAN TO PAY</p>
+                            <div class="qr-box">
+                                <img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=upi://pay?pa=7827803510@paytm&pn=Deepu%20Hardware" alt="UPI QR">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="no-print" style="display: flex; flex-direction: column; gap: 10px; margin-top: 20px;">
+                    <button class="btn btn-p" style="font-size: 1.2rem;" onclick="saveAndPrint()">💾 Save & Print Bill</button>
+                    <button id="waBtn" class="btn btn-wa" style="display: none;" onclick="shareWhatsApp()">📱 Share on WhatsApp</button>
+                    <button class="btn btn-d" onclick="location.reload()">New Bill / Clear</button>
+                </div>
+            </div>
+
+            <div id="inventory" class="tab-content" style="display:none;">
+                <div class="card"><h2>Inventory List</h2><table id="invTable"><thead><tr><th>Item Name</th><th>Last Rate (₹)</th><th>Action</th></tr></thead><tbody id="invBody"></tbody></table></div>
+            </div>
+
+            <div id="history" class="tab-content" style="display:none;">
+                <div class="card"><h2>Sales History</h2><table><thead><tr><th>Bill No</th><th>Customer</th><th>Total</th><th>Action</th></tr></thead><tbody id="histBody"></tbody></table></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let inventory = JSON.parse(localStorage.getItem('dh_inv')) || {};
+        let history = JSON.parse(localStorage.getItem('dh_hist')) || [];
+        let billCount = parseInt(localStorage.getItem('dh_count')) || 1;
+        let currentWAMsg = "";
+
+        function initApp() {
+            document.getElementById('currentDate').innerText = new Date().toLocaleDateString('en-IN');
+            updateBillNo(); updateDatalist(); addRow(); renderInv(); renderHist();
+        }
+
+        function login() {
+            if (btoa(document.getElementById('passInput').value) === "UEFwcHVAMzA3") {
+                document.getElementById('login-screen').style.display = 'none';
+                document.getElementById('dashboard').style.display = 'flex';
+            } else { alert("Wrong PIN!"); }
+        }
+
+        function updateBillNo() { document.getElementById('billNoDisplay').innerText = "Bill No: DHES" + billCount.toString().padStart(3, '0'); }
+
+        function updateDatalist() {
+            const dl = document.getElementById('item-list'); dl.innerHTML = '';
+            for (let k in inventory) dl.innerHTML += `<option value="${k}">`;
+        }
+
+        function addRow() {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td><input type="text" class="i-name" list="item-list" placeholder="Enter Item" oninput="fillRate(this)"></td>
+                <td><input type="number" class="i-qty" value="1" min="1" oninput="calc()"></td>
+                <td><input type="number" class="i-rate" value="0" oninput="calc()"></td>
+                <td><input type="text" class="i-war" value="No Warranty"></td>
+                <td style="text-align: right;"><b>₹<span class="i-total">0</span></b></td>
+                <td class="no-print"><button onclick="this.parentElement.parentElement.remove(); calc()" style="color:var(--d); background:none; border:none; cursor:pointer; font-size:1.2rem; padding:0 10px;">✕</button></td>
+            `;
+            document.getElementById('billBody').appendChild(tr);
+        }
+
+        function fillRate(inp) {
+            if (inventory[inp.value]) {
+                inp.parentElement.parentElement.querySelector('.i-rate').value = inventory[inp.value];
+                calc();
+            }
+        }
+
+        function calc() {
+            let gt = 0;
+            document.querySelectorAll('#billBody tr').forEach(r => {
+                let q = parseFloat(r.querySelector('.i-qty').value) || 0;
+                let rt = parseFloat(r.querySelector('.i-rate').value) || 0;
+                let total = q * rt;
+                r.querySelector('.i-total').innerText = total.toLocaleString('en-IN');
+                gt += total;
+            });
+            document.getElementById('grandTotal').innerText = gt.toLocaleString('en-IN');
+        }
+
+        function saveAndPrint() {
+            let items = [];
+            let bNo = "DHES" + billCount.toString().padStart(3, '0');
+            let cust = document.getElementById('custName').value || "Cash Sale";
+            
+            let msg = `*DEEPU HARDWARE*%0A*Bill No:* ${bNo}%0A*Customer:* ${cust}%0A----------------------%0A`;
+
+            // Fix for Print: ensure values are visible
+            document.querySelectorAll('input').forEach(inp => {
+                inp.setAttribute('value', inp.value);
+            });
+
+            document.querySelectorAll('#billBody tr').forEach(r => {
+                let n = r.querySelector('.i-name').value.trim();
+                let q = r.querySelector('.i-qty').value;
+                let rt = r.querySelector('.i-rate').value;
+                let w = r.querySelector('.i-war').value;
+                
+                if(n) {
+                    items.push({n, q, rt, w});
+                    // Inventory Logic (Dublicacy Check Included)
+                    inventory[n] = rt; 
+                    msg += `🔹 ${n} (${q} x ${rt}) = ₹${q*rt}%0A`;
+                }
+            });
+
+            if(!items.length) return alert("Please add at least one item!");
+
+            let total = document.getElementById('grandTotal').innerText;
+            msg += `----------------------%0A*Total: ₹${total}*%0A_Thank you!_`;
+            currentWAMsg = msg;
+
+            // Save Records
+            history.unshift({no: bNo, cust, total, items, date: new Date().toLocaleString()});
+            billCount++;
+            localStorage.setItem('dh_inv', JSON.stringify(inventory));
+            localStorage.setItem('dh_hist', JSON.stringify(history));
+            localStorage.setItem('dh_count', billCount);
+
+            updateDatalist(); renderInv(); renderHist();
+            
+            document.getElementById('waBtn').style.display = 'block';
+            window.print();
+        }
+
+        function shareWhatsApp() {
+            let ph = prompt("Enter WhatsApp Number (with 91):", "91");
+            if(ph && ph.length >= 10) {
+                window.open(`https://wa.me/${ph}?text=${currentWAMsg}`, '_blank');
+            }
+        }
+
+        function renderInv() {
+            const b = document.getElementById('invBody'); b.innerHTML = '';
+            // Sorting keys to keep list clean
+            Object.keys(inventory).sort().forEach(k => {
+                b.innerHTML += `<tr><td>${k}</td><td>₹${inventory[k]}</td><td><button class="btn-d" style="padding:4px 10px; border-radius:5px;" onclick="delInv('${k}')">Delete</button></td></tr>`;
+            });
+        }
+
+        function renderHist() {
+            const b = document.getElementById('histBody'); b.innerHTML = '';
+            history.forEach((h, i) => b.innerHTML += `<tr><td>${h.no}</td><td>${h.cust}</td><td>₹${h.total}</td><td><button class="btn-p" style="padding:4px 10px; border-radius:5px;" onclick="viewBill(${i})">View</button></td></tr>`);
+        }
+
+        function viewBill(i) {
+            let h = history[i];
+            alert(`Bill No: ${h.no}\nCustomer: ${h.cust}\nTotal: ₹${h.total}\nDate: ${h.date}\nItems: ${h.items.length}`);
+        }
+
+        function delInv(k) { if(confirm('Delete this item from inventory?')) { delete inventory[k]; localStorage.setItem('dh_inv', JSON.stringify(inventory)); renderInv(); updateDatalist(); } }
+        
+        function switchTab(id, el) {
+            document.querySelectorAll('.tab-content').forEach(t => t.style.display = 'none');
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+            document.getElementById(id).style.display = 'block'; el.classList.add('active');
+        }
+    </script>
+</body>
+</html>
